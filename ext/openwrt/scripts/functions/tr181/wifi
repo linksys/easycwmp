@@ -81,12 +81,12 @@ sub_entry_WiFi_AccessPoint() {
 
 
 wifi_radio_get_max_instance() {
-	local max=`$UCI_SHOW -X wireless | grep "wifi_radio_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+	local max=`$UCI_SHOW wireless | grep "wifi_radio_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
 	echo ${max:-0}
 }
 
 wifi_iface_get_max_instance() {
-	local max=`$UCI_SHOW -X wireless | grep "wifi_iface_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+	local max=`$UCI_SHOW wireless | grep "wifi_iface_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
 	echo ${max:-0}
 }
 
@@ -113,7 +113,7 @@ wifi_iface_update_instance() {
 }
 
 wifi_radio_browse_instances() {
-	local radio radios=`$UCI_SHOW -X wireless | grep "wireless\..*=wifi-device" | cut -d "=" -f 1`
+	local radio radios=`$UCI_SHOW wireless | grep "wireless\..*=wifi-device" | cut -d "=" -f 1`
 	for radio in $radios; do
 		local j=`wifi_radio_update_instance $radio`
 		sub_entry_WiFi_Radio  "$1" "$j" "$radio"
@@ -121,7 +121,7 @@ wifi_radio_browse_instances() {
 }
 
 wifi_ssid_browse_instances() {
-	local iface ifaces=`$UCI_SHOW -X wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
+	local iface ifaces=`$UCI_SHOW wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
 	for iface in $ifaces; do
 		local j=`wifi_iface_update_instance $iface`
 		sub_entry_WiFi_SSID  "$1" "$j" "$iface"
@@ -129,7 +129,7 @@ wifi_ssid_browse_instances() {
 }
 
 wifi_ap_browse_instances() {
-	local iface ifaces=`$UCI_SHOW -X wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
+	local iface ifaces=`$UCI_SHOW wireless | grep "wireless\..*=wifi-iface" | cut -d "=" -f 1`
 	for iface in $ifaces; do
 		local j=`wifi_iface_update_instance $iface`
 		sub_entry_WiFi_AccessPoint  "$1" "$j" "$iface"
@@ -289,7 +289,7 @@ wifi_ssid_set_LowerLayers() {
 	[ "$tmp" = "$2" ] && return
 	local instance=${tmp%.}
 	[ "$tmp" = "$instance" ] && return
-	local device=`$UCI_SHOW -X wireless | grep "wifi_radio_instance=$instance" | cut -d'.' -f2`
+	local device=`$UCI_SHOW wireless | grep "wifi_radio_instance=$instance" | cut -d'.' -f2`
 	$UCI_SET $1.device=$device
 }
 
@@ -313,7 +313,7 @@ wifi_ssid_set_X_IPInterface() {
 	[ "$tmp" = "$2" ] && return
 	local instance=${tmp%.}
 	[ "$tmp" = "$instance" ] && return
-	local network=`$UCI_SHOW -X network | grep "ip_int_instance=$instance" | cut -d'.' -f2`
+	local network=`$UCI_SHOW network | grep "ip_int_instance=$instance" | cut -d'.' -f2`
 	$UCI_SET $1.network=$network
 }
 
